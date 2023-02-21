@@ -1,6 +1,6 @@
 from random import randint
 import statistics
-#import psycopg2
+
 week = [
 ['GREEN', 'YELLOW', 'GREEN', 'BROWN', 'BLUE', 'PINK', 'BLUE', 'YELLOW', 'ORANGE', 'CREAM', 'ORANGE', 'RED', 'WHITE', 'BLUE', 'WHITE', 'BLUE', 'BLUE', 'BLUE', 'GREEN'],
 ['ARSH', 'BROWN', 'GREEN', 'BROWN', 'BLUE', 'BLUE', 'BLEW', 'PINK', 'PINK', 'ORANGE', 'ORANGE', 'RED', 'WHITE', 'BLUE', 'WHITE', 'WHITE', 'BLUE', 'BLUE', 'BLUE'],
@@ -9,15 +9,6 @@ week = [
 ['GREEN', 'WHITE', 'GREEN', 'BROWN', 'BLUE', 'BLUE', 'BLACK', 'WHITE', 'ORANGE', 'RED', 'RED', 'RED', 'WHITE', 'BLUE', 'WHITE', 'BLUE', 'BLUE', 'BLUE', 'WHITE']
 ]
 week_nums = {}
-
-#initializing the database
-conn = psycopg2.connect(database="testdb", user='username', password='password', host='127.0.0.1', port='5432')
-print('database initialize')
-
-cursor = conn.cursor()
-cursor.execute("DROP TABLE IF EXISTS COLORS; CREATE TABLE COLORS  (ID INT PRIMARY KEY NOT NULL, NAME TEXT NOT NULL,FREQUENCY INT NOT NULL  );")
-print('table created successfully')
-conn.commit()
 
 #check if s is number or not
 def isNan(s):
@@ -77,31 +68,6 @@ def onesAndZeros(num):
                 result += '0'
     return result
 
-def onesZeroToBaseTen(num):
-    lst = list(str(num))
-    result = 0
-    base = (len(lst) - 1)
-    for n in lst:
-        temp = (int(n) * 2**base)
-        result += temp
-        base -= 1
-    return result
-
-def onesAndZerosRandom():
-    
-    num = ''
-    for _ in range(4):
-        num += str(randint(0,1))
-    return num
-
-def searchNumberInList(original_list: list , number_to_search, search_list=None):
-    if search_list == None:
-        search_list = original_list.copy()
-    if search_list[0] == number_to_search:
-        return f'Found at index {original_list.index(number_to_search)} of list'
-    if len(search_list) == 1:
-        return f'Not found'
-    return searchNumberInList(original_list, number_to_search,search_list[1:])
 
 for day in week:
     sort_day = sorted(day)
@@ -114,12 +80,6 @@ for day in week:
                 week_nums[color] = day.count(color)
             count.append(color)
 print(f'{"_"*50}')        
-print('   ...........')
-for [key, value] in (week_nums.items()):
-   cursor.execute("INSERT INTO COLORS (ID, NAME, FREQUENCY) VALUE(%s, %s)", (key, value) )
-   conn.commit()
-   conn.close()
-   print(f'    {key:7} {value:3}') 
 print('   ...........')
 print(f'   Total   {sum(week_nums.values()):3}')
 print('   ...........')
@@ -134,26 +94,5 @@ print(f'{"_"*50}')
 print('   sum of the fist 50 of fibonnaci sequence')
 print(f'   {fibonnaci(50)}')
 print(f'{"_"*50}')
-ones = onesAndZerosRandom()
-print(f'   4 random 1s and 0s : {ones}')
-print(f'   coverted to base 10 :{onesZeroToBaseTen(ones)}')
-print(f'{"_"*50}')
 print(f"   input  >>> 0101101011101011011101101000111 \n   output >>> {onesAndZeros('0101101011101011011101101000111')}")
 print(f'{"_"*50}')
-print(f'   Recursive Search Algorithm....')
-print('   Enter the legth of sequence')
-length = input('   >>>')
-while isNan(length) == True:
-    print('   ..........')
-    print('   please enter valid number')
-    print('   Enter the legth of sequence')
-    length = input('   >>>')
-list_of_nums = []
-while len(list_of_nums) < int(length):
-    print('   Enter value')
-    value = input('   >>>')
-    list_of_nums.append(value)
-print(f'   sequence : {list_of_nums}')
-print('   Enter value to search')
-n = input('   >>>')
-print(f'   {searchNumberInList(list_of_nums, n)}')
